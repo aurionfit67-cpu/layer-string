@@ -4,7 +4,6 @@ import { useEffect } from "react";
 
 import { AddCardBar } from "./add-card-bar";
 import { CardLayer } from "./card-layer";
-import { CardStrings } from "./card-strings";
 import { EmptyCanvas } from "./empty-canvas";
 import { LayerHeader } from "./layer-header";
 import { LayerListView } from "./layer-list-view";
@@ -57,7 +56,6 @@ export function LayerWorkspace({ layerId }: { layerId: string }) {
       {mode === "canvas" ? (
         <WorkspaceCanvas layerId={layer.id} overlay={<WorkspaceChrome layerId={layer.id} compact={compact} />}>
           <CardLayer layerId={layer.id} mode="canvas" />
-          <CardStrings layerId={layer.id} />
         </WorkspaceCanvas>
       ) : (
         <>
