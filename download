@@ -1,0 +1,55 @@
+# dependencies
+/node_modules
+package-lock.json.zip
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# next.js
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+Thumbs.db
+
+# debug
+npm-debug.log*
+
+# env files (keep .env.example)
+.env
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+
+# testing harness (local only, not part of the shipped app)
+/test-results/
+/playwright-report/
+/blob-report/
+/scripts/.auth/
+
+# editors
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# smoke-test scratch build (npm run smoke)
+.smoke/
