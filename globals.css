@@ -1,0 +1,509 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+   LAYER design tokens
+
+   Direction: calm, precise, slightly futuristic. One accent, restrained lines,
+   and a dark mode with real depth (raised surfaces get lighter, not the other
+   way round) instead of a black wash.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --canvas: #f7f7f5;
+  --canvas-deep: #efefec;
+  --surface: #ffffff;
+  --surface-2: #fbfbfa;
+  --surface-3: #f1f1ee;
+  --ink: #101321;
+  --muted: #5c6379;
+  --faint: #8b91a5;
+  --line: #e4e4e0;
+  --line-strong: #d2d3ce;
+  --accent: #3b55c4;
+  --accent-ink: #24368f;
+  --accent-soft: #eaeefb;
+  --on-accent: #ffffff;
+  --success: #26745a;
+  --warning: #8a5b18;
+  --danger: #a33a2f;
+  --shadow-color: 222 130 180;
+  --shadow-strength: 1%;
+  --dot: #d7d7d2;
+  --grid: 24px;
+
+  /* Layer accents: triplets so alpha can be composed without a second token. */
+  --a-slate: 100 116 139;
+  --a-indigo: 79 102 208;
+  --a-teal: 20 132 130;
+  --a-amber: 178 122 34;
+  --a-rose: 186 82 96;
+  --a-violet: 124 92 196;
+  --a-mint: 62 138 96;
+  --a-clay: 156 106 82;
+}
+
+.dark {
+  --canvas: #101116;
+  --canvas-deep: #0b0c10;
+  --surface: #191b22;
+  --surface-2: #1e212a;
+  --surface-3: #262a35;
+  --ink: #e9ebf2;
+  --muted: #9aa2b6;
+  --faint: #6c748a;
+  --line: #2a2e3a;
+  --line-strong: #383d4b;
+  --accent: #8fa5ff;
+  --accent-ink: #b9c6ff;
+  --accent-soft: #1c2338;
+  --on-accent: #0b1024;
+  --success: #66c39a;
+  --warning: #e0ad5f;
+  --danger: #f0897c;
+  --shadow-color: 220 40% 5%;
+  --shadow-strength: 25%;
+  --dot: #2b3040;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-canvas-deep: var(--canvas-deep);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --font-sans: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", "Roboto Mono", Menlo, monospace;
+
+  --radius-card: 12px;
+  --radius-panel: 14px;
+
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+
+  --shadow-plate: 0 1px 2px rgb(var(--shadow-color) / calc(var(--shadow-strength) + 6%)),
+    0 8px 24px -12px rgb(var(--shadow-color) / calc(var(--shadow-strength) + 14%));
+  --shadow-lift: 0 2px 4px rgb(var(--shadow-color) / calc(var(--shadow-strength) + 8%)),
+    0 18px 40px -18px rgb(var(--shadow-color) / calc(var(--shadow-strength) + 22%));
+  --shadow-float: 0 24px 60px -24px rgb(var(--shadow-color) / 45%),
+    0 2px 8px rgb(var(--shadow-color) / calc(var(--shadow-strength) + 6%));
+
+  --animate-rise: rise 180ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  --animate-pop: pop 150ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  --animate-veil: veil 160ms ease-out both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes veil {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes card-flash {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  60% {
+    box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 26%, transparent);
+  }
+}
+
+@keyframes mark-drift {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+  }
+
+  /* The workspace owns its own scroll/gesture behaviour. */
+  [data-layer-canvas] {
+    touch-action: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 22%, transparent);
+  }
+
+  input,
+  textarea,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  textarea {
+    field-sizing: content;
+  }
+
+  [data-scroll] {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+
+  [data-scroll]::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  [data-scroll]::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 999px;
+  }
+
+  [data-scroll]::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@layer components {
+  /* Small caps label used across the chrome. */
+  .eyebrow {
+    font-size: 0.6875rem;
+    line-height: 1rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 550;
+    color: var(--faint);
+  }
+
+  /* Overlay material: one restrained frosted surface, not a glass theme. */
+  .chrome {
+    background: color-mix(in srgb, var(--surface) 82%, transparent);
+    backdrop-filter: blur(14px) saturate(1.35);
+    -webkit-backdrop-filter: blur(14px) saturate(1.35);
+  }
+
+  .chrome-solid {
+    background: color-mix(in srgb, var(--surface) 96%, transparent);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  }
+
+  /* Dot grid for the workspace, driven by the camera. */
+  .canvas-field {
+    background-color: var(--canvas);
+    background-image: radial-gradient(var(--dot) var(--dot-size, 1.4px), transparent 0);
+    background-size: var(--dot-gap, 24px) var(--dot-gap, 24px);
+    background-position: var(--dot-x, 0px) var(--dot-y, 0px);
+  }
+
+  .canvas-field::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      120% 90% at 50% 0%,
+      transparent 55%,
+      color-mix(in srgb, var(--canvas-deep) 70%, transparent) 100%
+    );
+  }
+
+  .card-plate {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-plate);
+  }
+
+  .card-plate[data-selected="true"] {
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent),
+      var(--shadow-lift);
+  }
+
+  .card-plate[data-dragging="true"] {
+    box-shadow: var(--shadow-float);
+    cursor: grabbing;
+    user-select: none;
+  }
+
+  .card-plate[data-flash="true"] {
+    animation: card-flash 900ms ease-out 1;
+  }
+
+  .card-shell {
+    /* Text shrinks more slowly than geometry, so zoomed-out Layers stay legible. */
+    font-size: calc(13px * var(--card-ink, 1));
+    line-height: 1.55;
+  }
+
+  .hairline {
+    border-color: color-mix(in srgb, var(--ink) 8%, transparent);
+  }
+
+  .stack-line {
+    background: linear-gradient(to right, transparent, var(--line-strong), transparent);
+  }
+
+  .quiet-field {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition:
+      background-color 140ms ease,
+      border-color 140ms ease,
+      box-shadow 140ms ease;
+  }
+
+  .quiet-field:hover:not(:focus) {
+    background: color-mix(in srgb, var(--ink) 3%, transparent);
+  }
+
+  .quiet-field:focus {
+    background: var(--surface);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent);
+    outline: none;
+  }
+
+  .dark .quiet-field:hover:not(:focus) {
+    background: color-mix(in srgb, var(--ink) 6%, transparent);
+  }
+
+  /* Layer accent, applied per element from Layer.accent. */
+  [data-accent] {
+    --accent-rgb: var(--a-slate);
+  }
+
+  [data-accent="slate"] {
+    --accent-rgb: var(--a-slate);
+  }
+  [data-accent="indigo"] {
+    --accent-rgb: var(--a-indigo);
+  }
+  [data-accent="teal"] {
+    --accent-rgb: var(--a-teal);
+  }
+  [data-accent="amber"] {
+    --accent-rgb: var(--a-amber);
+  }
+  [data-accent="rose"] {
+    --accent-rgb: var(--a-rose);
+  }
+  [data-accent="violet"] {
+    --accent-rgb: var(--a-violet);
+  }
+  [data-accent="mint"] {
+    --accent-rgb: var(--a-mint);
+  }
+  [data-accent="clay"] {
+    --accent-rgb: var(--a-clay);
+  }
+
+  [data-accent] .accent-bg {
+    background: rgb(var(--accent-rgb));
+  }
+
+  [data-accent] .accent-soft {
+    background: color-mix(in srgb, rgb(var(--accent-rgb)) 12%, var(--surface));
+    color: color-mix(in srgb, rgb(var(--accent-rgb)) 82%, var(--ink));
+  }
+
+  [data-accent] .accent-text {
+    color: color-mix(in srgb, rgb(var(--accent-rgb)) 88%, var(--ink));
+  }
+
+  [data-accent] .accent-ring {
+    box-shadow: inset 0 1px 0 color-mix(in srgb, rgb(var(--accent-rgb)) 22%, transparent);
+  }
+
+  [data-accent] .accent-edge {
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, rgb(var(--accent-rgb)) 92%, transparent),
+      color-mix(in srgb, rgb(var(--accent-rgb)) 40%, transparent)
+    );
+  }
+
+  .layer-mark {
+    display: grid;
+    gap: 4px;
+  }
+
+  .layer-mark span {
+    display: block;
+    width: 26px;
+    height: 6px;
+    border-radius: 2px;
+    background: var(--line-strong);
+    animation: mark-drift 1.6s ease-in-out infinite;
+  }
+
+  .layer-mark span:nth-child(2) {
+    width: 20px;
+    animation-delay: 0.14s;
+    background: color-mix(in srgb, var(--accent) 55%, var(--line-strong));
+  }
+
+  .layer-mark span:nth-child(3) {
+    width: 14px;
+    animation-delay: 0.28s;
+  }
+
+  /* Platform glyph for modifier hints, decided before paint. */
+  .kbd-mod::after {
+    content: "Ctrl";
+  }
+
+  [data-platform="mac"] .kbd-mod::after {
+    content: "\2318";
+  }
+
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.4rem;
+    height: 1.25rem;
+    padding: 0 0.3rem;
+    border: 1px solid var(--line);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    background: var(--surface-2);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--muted);
+  }
+
+  /* Affordance for the few icon buttons where a visible label would clutter. */
+  [data-tooltip] {
+    position: relative;
+  }
+
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    translate: -50% 0;
+    padding: 4px 7px;
+    border-radius: 6px;
+    background: var(--ink);
+    color: var(--canvas);
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 120ms ease;
+    z-index: 60;
+  }
+
+  [data-tooltip]:hover::after,
+  [data-tooltip]:focus-visible::after {
+    opacity: 1;
+  }
+
+  [data-tooltip][data-tooltip-side="left"]::after {
+    top: 50%;
+    left: auto;
+    right: calc(100% + 8px);
+    translate: 0 -50%;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Motion is a signal, never a delay: everything collapses when asked. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-motion="reduced"] *,
+[data-motion="reduced"] *::before,
+[data-motion="reduced"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
